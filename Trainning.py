@@ -1,4 +1,5 @@
 import tensorflow as tf
+from sklearn.metrics import confusion_matrix
 import pandas as pd
 import numpy as np
 import json
@@ -7,7 +8,7 @@ import math
 
 BATCH_SIZE = 1000
 LEARNNING_RATE = 0.001
-TRAINNING_STEPS = 40000
+TRAINNING_STEPS = 100000
 
 INPUT_NODE = 180
 OUTPUT_NODE = 5
@@ -17,10 +18,10 @@ LAYER1_OUTPUT_SIZE = 258
 LAYER1_OUTPUT_DEEP = 5
 
 # N 101785
-N_NUM = 40000
-TRAINING_N_NUM = 32000
-TESTING_N_NUM = 4000
-VALIDATION_N_NUM = 4000
+N_NUM = 100000
+TRAINING_N_NUM = 80000
+TESTING_N_NUM = 20000
+VALIDATION_N_NUM = 20000
 # S 4294
 S_NUM = 40000
 TRAINING_S_NUM = math.floor(S_NUM * 0.8)
@@ -42,7 +43,7 @@ TRAINING_Q_NUM = math.floor(Q_NUM * 0.8)
 TESTING_Q_NUM = math.floor(Q_NUM * 0.1)
 VALIDATION_Q_NUM = math.ceil(Q_NUM * 0.1)
 
-TRAIN_MODEL_NAME = "ModelB"
+TRAIN_MODEL_NAME = "ModelC"
 TEST_MODEL_NAME = "ModelB"
 
 def load_samples():
@@ -116,6 +117,7 @@ def get_batch(samples_dict: dict, batch_size, sample_type: str = 'sample_type'):
     label = 0
     for index in range(batch_size):
         # label = np.random.randint(OUTPUT_NODE)
+        label = np.random.randint(0, 5)
         if label == 0:
             data_json = samples_N['raw_data'].iloc[indices_N[index] + offset_N]
         elif label == 1:
@@ -128,7 +130,7 @@ def get_batch(samples_dict: dict, batch_size, sample_type: str = 'sample_type'):
             data_json = samples_Q['raw_data'].iloc[indices_Q[index] + offset_Q]
         else:
             print('Error!')
-        label += 1
+        # label += 1
         if label == 5:
             label = 0
 
@@ -254,12 +256,14 @@ def trainning(is_continue=False):
         ckpt = tf.train.get_checkpoint_state(ck_path)
         if ckpt and ckpt.model_checkpoint_path:
             saver_file_path: str = ckpt.model_checkpoint_path
-            if saver_file_path.count(TRAIN_MODEL_NAME) > 0:
+
+            if saver_file_path.count(TRAIN_MODEL_NAME) > 0 and os.path.exists(saver_file_path + ".meta"):
                 can_restore = True
                 saver = tf.train.Saver(filename=saver_file_path)
     # saver = tf.train.Saver()
 
     tf.add_to_collection("pred_tensor", pred_tensor)
+    tf.add_to_collection("evaluation_step", evaluation_step)
 
     with tf.Session() as sess:
         sess.run(tf.global_variables_initializer())
@@ -280,22 +284,57 @@ def trainning(is_continue=False):
             #     print(op.name, op.values())
 
         # print("Step...", sess.graph_def().get)
-
-        for i in range(start_i+1, TRAINNING_STEPS):
+        print("Start Training...Testing each 500 steps, Saving each 1000 steps")
+        for i in range(start_i + 1, TRAINNING_STEPS):
             training_samples, training_labels = get_batch(samples_dict, BATCH_SIZE, sample_type='training')
             sess.run(train_step, feed_dict={input_values: training_samples, output_values: training_labels})
 
-            if i % 100 == 0:
+            if i % 100 == 0 or i == start_i + 1:
                 loss = cost.eval(feed_dict={input_values: training_samples, output_values: training_labels})
                 print("Iteration %d/%d:loss %f" % (i, TRAINNING_STEPS, loss))
 
-            if i % 500 == 0:
+            if i % 500 == 0 or i == start_i + 1:
                 # Testing
                 testing_samples, testing_labels = get_batch(samples_dict, BATCH_SIZE, sample_type='testing')
-                testing_acc = sess.run(evaluation_step,
-                                       feed_dict={input_values: testing_samples, output_values: testing_labels})
+                # testing_acc = sess.run(evaluation_step,
+                #                        feed_dict={input_values: testing_samples, output_values: testing_labels})
+                y_pred = logits.eval(feed_dict={input_values: testing_samples,
+                                                output_values: testing_labels})  # ,keep_prob: 1.0})
 
-                print("Testing acc = %.2f%%" % (testing_acc * 100))
+
+                y_pred = np.argmax(y_pred, axis=1)
+                y_true = np.argmax(testing_labels, axis=1)
+
+                Conf_Mat = confusion_matrix(y_true, y_pred)  # 利用专用函数得到混淆矩阵
+                Acc = np.mean(y_pred == y_true)
+                Acc_N = Conf_Mat[0][0] / np.sum(Conf_Mat[0])
+                Acc_S = Conf_Mat[1][1] / np.sum(Conf_Mat[1])
+                Acc_V = Conf_Mat[2][2] / np.sum(Conf_Mat[2])
+                Acc_F = Conf_Mat[3][3] / np.sum(Conf_Mat[3])
+                Acc_Q = Conf_Mat[4][4] / np.sum(Conf_Mat[4])
+
+                print('\nAccuracy=%.2f%%' % (Acc * 100))
+                print('Accuracy_N=%.2f%%' % (Acc_N * 100))
+                print('Accuracy_S=%.2f%%' % (Acc_S * 100))
+                print('Accuracy_V=%.2f%%' % (Acc_V * 100))
+                print('Accuracy_F=%.2f%%' % (Acc_F * 100))
+                print('Accuracy_Q=%.2f%%' % (Acc_Q * 100))
+                print('\nConfusion Matrix:\n')
+                print(Conf_Mat)
+
+                Se_N = Conf_Mat[0][0] / np.sum(Conf_Mat[:, 0])
+                Se_S = Conf_Mat[1][1] / np.sum(Conf_Mat[:, 1])
+                Se_V = Conf_Mat[2][2] / np.sum(Conf_Mat[:, 2])
+                Se_F = Conf_Mat[3][3] / np.sum(Conf_Mat[:, 3])
+                Se_Q = Conf_Mat[4][4] / np.sum(Conf_Mat[:, 4])
+                print('Sensity_N=%.2f%%' % (Se_N * 100))
+                print('Sensity_S=%.2f%%' % (Se_S * 100))
+                print('Sensity_V=%.2f%%' % (Se_V * 100))
+                print('Sensity_F=%.2f%%' % (Se_F * 100))
+                print('Sensity_Q=%.2f%%' % (Se_Q * 100))
+                print("======================================")
+
+                # print("Testing acc = %.2f%%" % (testing_acc * 100))
 
             if (i % 1000 == 0 or i == TRAINNING_STEPS - 1) and i > 0:
                 print("Save model to path:", store_path)
@@ -366,9 +405,64 @@ def analysis_model():
                     #     print(op.name, op.values())
     pass
 
+def validation(times=10, model_name=""):
+
+    model_path = os.getcwd() + "/TrainingModels/" + model_name
+
+    # if not tf.train.checkpoint_exists(model_path + "checkpoint"):
+    #     print("Can't find checkpoint file in path:", model_path)
+    #     return
+    #
+    # ckpt = tf.train.get_checkpoint_state(model_path)
+    # if not ckpt or not ckpt.model_checkpoint_path:
+    #     print("Can't find model_checkpoint_path")
+    #     return
+
+    samples_dict = load_samples()
+
+    with tf.Session() as sess:
+        # Validation
+
+        saver = tf.train.import_meta_graph(model_path + ".meta")
+        saver.restore(sess, model_path)
+
+        graph = tf.get_default_graph()
+
+        input_values = graph.get_tensor_by_name("input_values:0")
+        output_values = graph.get_tensor_by_name("output_values:0")
+
+        # final_tensor = graph.get_tensor_by_name("final_tensor:0")
+        # final_tensor = graph.get_operation_by_name("training/final_tensor")
+
+        # with tf.name_scope("evaluation"):
+        #     correct_prediction = tf.equal(tf.argmax(final_tensor, 1), tf.argmax(output_values, 1))
+        #     evaluation_step = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
+
+        evaluation_step = tf.get_collection("evaluation_step")[0]
+        for i in range(times):
+            validation_samples, validation_labels = get_batch(samples_dict, BATCH_SIZE, sample_type='validation')
+            validation_acc = sess.run(evaluation_step,
+                                      feed_dict={input_values: validation_samples, output_values: validation_labels})
+
+            print("Validation acc = %.2f%%" % (validation_acc * 100))
+    pass
 
 if __name__ == '__main__':
-    # trainning()
-    trainning(is_continue=True)
+
+    while 1:
+        # input_str = input("Please Input:\n"
+        #                   "1. Training\n"
+        #                   "2. validation\n"
+        #                   "q/Q: Quit\n")
+
+        input_str = "1"
+        if input_str == '1':
+            trainning(is_continue=True)
+        elif input_str == '2':
+            validation(model_name="ModelC.ckpt-6000")
+        else:
+            break
+
+        break
     # analysis_model()
     pass

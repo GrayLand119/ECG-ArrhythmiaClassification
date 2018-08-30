@@ -1,0 +1,61 @@
+
+# ModelB-40000
+ModelB - 1000Batch - 40000training times - fixed num of each type data.
+## N
+Validation acc = 2.80%
+Validation acc = 1.90%
+Validation acc = 1.70%
+Validation acc = 1.80%
+Validation acc = 2.50%
+Validation acc = 1.50%
+Validation acc = 2.60%
+Validation acc = 2.30%
+Validation acc = 2.40%
+Validation acc = 2.20%
+
+## S
+Validation acc = 3.90%
+Validation acc = 4.70%
+Validation acc = 3.80%
+Validation acc = 5.30%
+Validation acc = 4.90%
+Validation acc = 3.60%
+Validation acc = 4.10%
+Validation acc = 4.40%
+Validation acc = 4.70%
+Validation acc = 4.50%
+
+## V
+Validation acc = 0.00%
+Validation acc = 0.00%
+Validation acc = 0.00%
+Validation acc = 0.00%
+Validation acc = 0.00%
+Validation acc = 0.00%
+Validation acc = 0.00%
+Validation acc = 0.00%
+Validation acc = 0.00%
+Validation acc = 0.00%
+## F
+Validation acc = 1.40%
+Validation acc = 2.30%
+Validation acc = 1.80%
+Validation acc = 2.10%
+Validation acc = 1.60%
+Validation acc = 1.70%
+Validation acc = 1.70%
+Validation acc = 2.30%
+Validation acc = 2.90%
+Validation acc = 2.20%
+## Q
+Validation acc = 0.00%
+Validation acc = 0.00%
+Validation acc = 0.00%
+Validation acc = 0.00%
+Validation acc = 0.00%
+Validation acc = 0.00%
+Validation acc = 0.00%
+Validation acc = 0.00%
+Validation acc = 0.00%
+Validation acc = 0.00%
+## All
