@@ -43,9 +43,9 @@ def separate_type(type=None):
 
 
 if __name__ == "__main__":
-    separate_type('N')
-    separate_type('S')
-    separate_type('V')
-    separate_type('F')
+    # separate_type('N')
+    # separate_type('S')
+    # separate_type('V')
+    # separate_type('F')
     separate_type('Q')
     pass

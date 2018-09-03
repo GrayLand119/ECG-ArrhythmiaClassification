@@ -6,7 +6,7 @@ import json
 import os
 import math
 
-BATCH_SIZE = 1000
+BATCH_SIZE = 500
 LEARNNING_RATE = 0.001
 TRAINNING_STEPS = 100000
 
@@ -44,19 +44,41 @@ TESTING_Q_NUM = math.floor(Q_NUM * 0.1)
 VALIDATION_Q_NUM = math.ceil(Q_NUM * 0.1)
 
 TRAIN_MODEL_NAME = "ModelC"
-TEST_MODEL_NAME = "ModelB"
+TEST_MODEL_NAME = "ModelC"
+
 
 def load_samples():
     cur_path = os.getcwd() + "/Train-DB-Checked/"
-    # N samples
-    samples_N = pd.read_csv(cur_path + 'N/datas-mean.csv')
-    samples_S = pd.read_csv(cur_path + 'S/datas-mean.csv')
-    samples_V = pd.read_csv(cur_path + 'V/datas-mean.csv')
-    samples_F = pd.read_csv(cur_path + 'F/datas-mean.csv')
-    samples_Q = pd.read_csv(cur_path + 'Q/datas-mean.csv')
 
-    return {"N": samples_N, "S": samples_S, "V": samples_V, "F": samples_F, "Q": samples_Q}
+    samples = {}
+    class_types = list("NSVFQ")
 
+    for type_s in class_types:
+        t_data = pd.read_csv(cur_path + type_s + '/datas-training.csv')
+        t_length = len(t_data.index)
+        samples["training_" + type_s] = t_data
+        samples["training_" + type_s + "_length"] = t_length
+        print("%s training set length %d " %(type_s, t_length))
+
+        t_data = pd.read_csv(cur_path + type_s + '/datas-testing.csv')
+        t_length = len(t_data.index)
+        samples["testing_" + type_s] = t_data
+        samples["testing_" + type_s + "_length"] = t_length
+        print("%s testing set length %d " % (type_s, t_length))
+
+        t_data = pd.read_csv(cur_path + type_s + '/datas-validation_path.csv')
+        t_length = len(t_data.index)
+        samples["validation_" + type_s] = t_data
+        samples["validation_" + type_s + "_length"] = t_length
+        print("%s validation set length %d " % (type_s, t_length))
+    # samples_N = pd.read_csv(cur_path + 'N/datas-mean.csv')
+    # samples_S = pd.read_csv(cur_path + 'S/datas-mean.csv')
+    # samples_V = pd.read_csv(cur_path + 'V/datas-mean.csv')
+    # samples_F = pd.read_csv(cur_path + 'F/datas-mean.csv')
+    # samples_Q = pd.read_csv(cur_path + 'Q/datas-mean.csv')
+
+    # return {"N": samples_N, "S": samples_S, "V": samples_V, "F": samples_F, "Q": samples_Q}
+    return samples
 
 def labels_map():
     pass
@@ -67,45 +89,47 @@ def get_batch(samples_dict: dict, batch_size, sample_type: str = 'sample_type'):
     sample_type has 3 types : 'training', 'testing', 'validation'
     :return: (samples, labels)
     """
-    if sample_type == 'training':
-        indices_N = np.random.choice(TRAINING_N_NUM, batch_size, False)
-        indices_S = np.random.choice(TRAINING_S_NUM, batch_size, False)
-        indices_V = np.random.choice(TRAINING_V_NUM, batch_size, False)
-        indices_F = np.random.choice(TRAINING_F_NUM, batch_size, False)
-        indices_Q = np.random.choice(TRAINING_Q_NUM, batch_size, False)
-        offset_N = 0
-        offset_S = 0
-        offset_V = 0
-        offset_F = 0
-        offset_Q = 0
-    elif sample_type == 'testing':
-        indices_N = np.random.choice(TESTING_N_NUM, batch_size, False)
-        indices_S = np.random.choice(TESTING_S_NUM, batch_size, False)
-        indices_V = np.random.choice(TESTING_V_NUM, batch_size, False)
-        indices_F = np.random.choice(TESTING_F_NUM, batch_size, False)
-        indices_Q = np.random.choice(TESTING_Q_NUM, batch_size, False)
-        offset_N = TRAINING_N_NUM
-        offset_S = TRAINING_S_NUM
-        offset_V = TRAINING_V_NUM
-        offset_F = TRAINING_F_NUM
-        offset_Q = TRAINING_Q_NUM
-    elif sample_type == 'validation':
-        indices_N = np.random.choice(VALIDATION_N_NUM, batch_size, False)
-        indices_S = np.random.choice(VALIDATION_S_NUM, batch_size, False)
-        indices_V = np.random.choice(VALIDATION_V_NUM, batch_size, False)
-        indices_F = np.random.choice(VALIDATION_F_NUM, batch_size, False)
-        indices_Q = np.random.choice(VALIDATION_Q_NUM, batch_size, False)
-        offset_N = TRAINING_N_NUM + TESTING_N_NUM
-        offset_S = TRAINING_S_NUM + TESTING_S_NUM
-        offset_V = TRAINING_V_NUM + TESTING_V_NUM
-        offset_F = TRAINING_F_NUM + TESTING_F_NUM
-        offset_Q = TRAINING_Q_NUM + TESTING_Q_NUM
+    # t_length = samples_dict[sample_type + "_N_length"]
+    indices_N = np.random.choice(samples_dict[sample_type + "_N_length"], batch_size, False)
+    indices_S = np.random.choice(samples_dict[sample_type + "_S_length"], batch_size, False)
+    indices_V = np.random.choice(samples_dict[sample_type + "_V_length"], batch_size, False)
+    indices_F = np.random.choice(samples_dict[sample_type + "_F_length"], batch_size, False)
+    indices_Q = np.random.choice(samples_dict[sample_type + "_Q_length"], batch_size, False)
 
-    samples_N: pd.DataFrame = samples_dict['N']
-    samples_S: pd.DataFrame = samples_dict['S']
-    samples_V: pd.DataFrame = samples_dict['V']
-    samples_F: pd.DataFrame = samples_dict['F']
-    samples_Q: pd.DataFrame = samples_dict['Q']
+    # if sample_type == 'training':
+    #     offset_N = 0
+    #     offset_S = 0
+    #     offset_V = 0
+    #     offset_F = 0
+    #     offset_Q = 0
+    # elif sample_type == 'testing':
+    #     indices_N = np.random.choice(samples_dict[sample_type + "_N_length"], batch_size, False)
+    #     indices_S = np.random.choice(samples_dict[sample_type + "_N_length"], batch_size, False)
+    #     indices_V = np.random.choice(samples_dict[sample_type + "_N_length"], batch_size, False)
+    #     indices_F = np.random.choice(samples_dict[sample_type + "_N_length"], batch_size, False)
+    #     indices_Q = np.random.choice(samples_dict[sample_type + "_N_length"], batch_size, False)
+    #     offset_N = TRAINING_N_NUM
+    #     offset_S = TRAINING_S_NUM
+    #     offset_V = TRAINING_V_NUM
+    #     offset_F = TRAINING_F_NUM
+    #     offset_Q = TRAINING_Q_NUM
+    # elif sample_type == 'validation':
+    #     indices_N = np.random.choice(samples_dict[sample_type + "_N_length"], batch_size, False)
+    #     indices_S = np.random.choice(samples_dict[sample_type + "_N_length"], batch_size, False)
+    #     indices_V = np.random.choice(samples_dict[sample_type + "_N_length"], batch_size, False)
+    #     indices_F = np.random.choice(samples_dict[sample_type + "_N_length"], batch_size, False)
+    #     indices_Q = np.random.choice(samples_dict[sample_type + "_N_length"], batch_size, False)
+    #     offset_N = TRAINING_N_NUM + TESTING_N_NUM
+    #     offset_S = TRAINING_S_NUM + TESTING_S_NUM
+    #     offset_V = TRAINING_V_NUM + TESTING_V_NUM
+    #     offset_F = TRAINING_F_NUM + TESTING_F_NUM
+    #     offset_Q = TRAINING_Q_NUM + TESTING_Q_NUM
+
+    samples_N: pd.DataFrame = samples_dict[sample_type + '_N']
+    samples_S: pd.DataFrame = samples_dict[sample_type + '_S']
+    samples_V: pd.DataFrame = samples_dict[sample_type + '_V']
+    samples_F: pd.DataFrame = samples_dict[sample_type + '_F']
+    samples_Q: pd.DataFrame = samples_dict[sample_type + '_Q']
 
     # datas_N = []
     # datas_F = []
@@ -119,20 +143,20 @@ def get_batch(samples_dict: dict, batch_size, sample_type: str = 'sample_type'):
         # label = np.random.randint(OUTPUT_NODE)
         label = np.random.randint(0, 5)
         if label == 0:
-            data_json = samples_N['raw_data'].iloc[indices_N[index] + offset_N]
+            data_json = samples_N['raw_data'].iloc[indices_N[index]]
         elif label == 1:
-            data_json = samples_S['raw_data'].iloc[indices_S[index] + offset_S]
+            data_json = samples_S['raw_data'].iloc[indices_S[index]]
         elif label == 2:
-            data_json = samples_V['raw_data'].iloc[indices_V[index] + offset_V]
+            data_json = samples_V['raw_data'].iloc[indices_V[index]]
         elif label == 3:
-            data_json = samples_F['raw_data'].iloc[indices_F[index] + offset_F]
+            data_json = samples_F['raw_data'].iloc[indices_F[index]]
         elif label == 4:
-            data_json = samples_Q['raw_data'].iloc[indices_Q[index] + offset_Q]
+            data_json = samples_Q['raw_data'].iloc[indices_Q[index]]
         else:
             print('Error!')
         # label += 1
-        if label == 5:
-            label = 0
+        # if label == 5:
+        #     label = 0
 
         data_list = json.loads(data_json)
         if len(data_list) != 180:

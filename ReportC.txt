@@ -1,0 +1,272 @@
+N training set length 8136
+N testing set length 1017
+N validation set length 1017
+S training set length 13740
+S testing set length 1717
+S validation set length 1719
+V training set length 20505
+V testing set length 2563
+V validation set length 2564
+F training set length 6616
+F testing set length 827
+F validation set length 827
+Q training set length 8308
+Q testing set length 1038
+Q validation set length 1040
+2018-08-31 09:13:50.276231: I tensorflow/core/platform/cpu_feature_guard.cc:141] Your CPU supports instructions that this TensorFlow binary was not compiled to use: AVX2 FMA
+Start Training...Testing each 500 steps, Saving each 1000 steps
+Iteration 1/100000:loss 1.610119
+
+Accuracy=23.40%
+Accuracy_N=75.28%
+Accuracy_S=0.00%
+Accuracy_V=45.79%
+Accuracy_F=0.00%
+Accuracy_Q=0.93%
+
+Confusion Matrix:
+
+[[67  0 21  1  0]
+ [83  0 14  1  0]
+ [49  0 49  8  1]
+ [28  0 70  0  1]
+ [72  1 29  4  1]]
+Sensity_N=22.41%
+Sensity_S=0.00%
+Sensity_V=26.78%
+Sensity_F=0.00%
+Sensity_Q=33.33%
+======================================
+Iteration 100/100000:loss 0.585953
+Iteration 200/100000:loss 0.398528
+Iteration 300/100000:loss 0.374634
+Iteration 400/100000:loss 0.399275
+Iteration 500/100000:loss 0.283323
+
+Accuracy=91.00%
+Accuracy_N=91.30%
+Accuracy_S=85.00%
+Accuracy_V=92.93%
+Accuracy_F=89.52%
+Accuracy_Q=96.15%
+
+Confusion Matrix:
+
+[[ 84   3   0   2   3]
+ [ 10  85   1   1   3]
+ [  5   0  92   2   0]
+ [  5   1   3  94   2]
+ [  2   0   1   1 100]]
+Sensity_N=79.25%
+Sensity_S=95.51%
+Sensity_V=94.85%
+Sensity_F=94.00%
+Sensity_Q=92.59%
+======================================
+Iteration 600/100000:loss 0.301508
+Iteration 700/100000:loss 0.267846
+Iteration 800/100000:loss 0.244497
+Iteration 900/100000:loss 0.226801
+Iteration 1000/100000:loss 0.225553
+
+Accuracy=93.40%
+Accuracy_N=94.38%
+Accuracy_S=90.38%
+Accuracy_V=96.19%
+Accuracy_F=87.25%
+Accuracy_Q=99.00%
+
+Confusion Matrix:
+
+[[ 84   3   0   0   2]
+ [  9  94   0   0   1]
+ [  2   0 101   2   0]
+ [  4   1   4  89   4]
+ [  0   0   0   1  99]]
+Sensity_N=84.85%
+Sensity_S=95.92%
+Sensity_V=96.19%
+Sensity_F=96.74%
+Sensity_Q=93.40%
+======================================
+Save model to path: /Users/languilin/Desktop/WorkSpacePrivate/GitHubGrayLand/ECG-Arrhythmia/TrainingModels/ModelC.ckpt
+Iteration 1100/100000:loss 0.222098
+Iteration 1200/100000:loss 0.168571
+Iteration 1300/100000:loss 0.207118
+Iteration 1400/100000:loss 0.177274
+Iteration 1500/100000:loss 0.141902
+
+Accuracy=93.40%
+Accuracy_N=90.57%
+Accuracy_S=95.15%
+Accuracy_V=93.27%
+Accuracy_F=89.13%
+Accuracy_Q=98.95%
+
+Confusion Matrix:
+
+[[96  5  1  3  1]
+ [ 4 98  1  0  0]
+ [ 2  1 97  3  1]
+ [ 7  1  0 82  2]
+ [ 0  0  1  0 94]]
+Sensity_N=88.07%
+Sensity_S=93.33%
+Sensity_V=97.00%
+Sensity_F=93.18%
+Sensity_Q=95.92%
+======================================
+Iteration 1600/100000:loss 0.170335
+Iteration 1700/100000:loss 0.186575
+Iteration 1800/100000:loss 0.135338
+Iteration 1900/100000:loss 0.128350
+Iteration 2000/100000:loss 0.110450
+
+Accuracy=93.80%
+Accuracy_N=93.81%
+Accuracy_S=90.70%
+Accuracy_V=91.75%
+Accuracy_F=95.33%
+Accuracy_Q=96.91%
+
+Confusion Matrix:
+
+[[106   6   1   0   0]
+ [  7  78   1   0   0]
+ [  1   0  89   7   0]
+ [  2   2   1 102   0]
+ [  0   2   1   0  94]]
+Sensity_N=91.38%
+Sensity_S=88.64%
+Sensity_V=95.70%
+Sensity_F=93.58%
+Sensity_Q=100.00%
+======================================
+Save model to path: /Users/languilin/Desktop/WorkSpacePrivate/GitHubGrayLand/ECG-Arrhythmia/TrainingModels/ModelC.ckpt
+Iteration 2100/100000:loss 0.114692
+Iteration 2200/100000:loss 0.098530
+Iteration 2300/100000:loss 0.071617
+Iteration 2400/100000:loss 0.140422
+Iteration 2500/100000:loss 0.063150
+
+Accuracy=95.80%
+Accuracy_N=97.32%
+Accuracy_S=91.51%
+Accuracy_V=94.90%
+Accuracy_F=96.74%
+Accuracy_Q=98.91%
+
+Confusion Matrix:
+
+[[109   2   0   1   0]
+ [  7  97   1   1   0]
+ [  0   1  93   3   1]
+ [  2   0   1  89   0]
+ [  0   0   1   0  91]]
+Sensity_N=92.37%
+Sensity_S=97.00%
+Sensity_V=96.88%
+Sensity_F=94.68%
+Sensity_Q=98.91%
+======================================
+Iteration 2600/100000:loss 0.089410
+Iteration 2700/100000:loss 0.067864
+Iteration 2800/100000:loss 0.121898
+Iteration 2900/100000:loss 0.141311
+Iteration 3000/100000:loss 0.089876
+
+Accuracy=96.40%
+Accuracy_N=97.12%
+Accuracy_S=93.48%
+Accuracy_V=95.24%
+Accuracy_F=97.85%
+Accuracy_Q=98.11%
+
+Confusion Matrix:
+
+[[101   1   0   1   1]
+ [  5  86   1   0   0]
+ [  1   1 100   2   1]
+ [  2   0   0  91   0]
+ [  0   0   2   0 104]]
+Sensity_N=92.66%
+Sensity_S=97.73%
+Sensity_V=97.09%
+Sensity_F=96.81%
+Sensity_Q=98.11%
+======================================
+Save model to path: /Users/languilin/Desktop/WorkSpacePrivate/GitHubGrayLand/ECG-Arrhythmia/TrainingModels/ModelC.ckpt
+Iteration 3100/100000:loss 0.075161
+Iteration 3200/100000:loss 0.116702
+Iteration 3300/100000:loss 0.083704
+Iteration 3400/100000:loss 0.087697
+Iteration 3500/100000:loss 0.088388
+
+Accuracy=96.00%
+Accuracy_N=99.03%
+Accuracy_S=96.30%
+Accuracy_V=93.27%
+Accuracy_F=91.75%
+Accuracy_Q=100.00%
+
+Confusion Matrix:
+
+[[102   0   1   0   0]
+ [  3 104   0   1   0]
+ [  3   0  97   4   0]
+ [  4   1   3  89   0]
+ [  0   0   0   0  88]]
+Sensity_N=91.07%
+Sensity_S=99.05%
+Sensity_V=96.04%
+Sensity_F=94.68%
+Sensity_Q=100.00%
+======================================
+...
+
+Iteration 8500/100000:loss 0.019590
+
+Accuracy=98.40%
+Accuracy_N=96.26%
+Accuracy_S=98.02%
+Accuracy_V=97.59%
+Accuracy_F=100.00%
+Accuracy_Q=100.00%
+
+Confusion Matrix:
+
+[[103   1   0   2   1]
+ [  1  99   0   1   0]
+ [  0   2  81   0   0]
+ [  0   0   0 107   0]
+ [  0   0   0   0 102]]
+Sensity_N=99.04%
+Sensity_S=97.06%
+Sensity_V=100.00%
+Sensity_F=97.27%
+Sensity_Q=99.03%
+======================================
+...
+Iteration 12000/100000:loss 0.032258
+
+Accuracy=98.40%
+Accuracy_N=96.15%
+Accuracy_S=99.15%
+Accuracy_V=97.92%
+Accuracy_F=100.00%
+Accuracy_Q=98.89%
+
+Confusion Matrix:
+
+[[100   2   1   0   1]
+ [  1 117   0   0   0]
+ [  0   0  94   1   1]
+ [  0   0   0  92   0]
+ [  1   0   0   0  89]]
+Sensity_N=98.04%
+Sensity_S=98.32%
+Sensity_V=98.95%
+Sensity_F=98.92%
+Sensity_Q=97.80%
+======================================
+Save model to path: /Users/languilin/Desktop/WorkSpacePrivate/GitHubGrayLand/ECG-Arrhythmia/TrainingModels/ModelC.ckpt

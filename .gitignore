@@ -115,5 +115,7 @@ dmypy.json
 *.atr
 *.dat
 *.hea
+*.pdf
+m2后台数据/**/*.txt
 mydcnn.py
 
