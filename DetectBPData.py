@@ -119,7 +119,7 @@ def detet_with_file(labels, sess, input_values, pred_tensor, file_path, pdf=None
     if pdf:
         plt.figure(figsize=(16*3, 9*3))
     else:
-        plt.figure(figsize=(8, 5))
+        plt.figure(figsize=(12, 8))
 
     ax1 = plt.subplot(332)
     ax1.set_title("Fig-1\nXQRS Detect")
@@ -265,15 +265,15 @@ if __name__ == '__main__':
     has_data = True
     # pdf_path = file_path.replace(".txt", ".pdf")
     # pdf = PdfPages(pdf_path)
-    page_min = 10
-    start_min = 10
-    end_min = page_min
+    page_min = 5
+    start_min = 35
+    end_min = 2
     while has_data:
         has_data = detet_with_file(labels, sess, input_values, pred_tensor, file_path, pdf=None, start_min=start_min,
                                    end_min=end_min)
         start_min += page_min
         end_min += page_min
-        break
+
 
     # pdf.close()
 
